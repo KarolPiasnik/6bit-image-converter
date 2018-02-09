@@ -1,4 +1,5 @@
 #include "ImageConverter.h"
+
 void ImageConverter::fillArrays()
 {
 	grayScale[0] = { 0,0,0 };
@@ -137,7 +138,7 @@ void ImageConverter::fillArrays()
 void ImageConverter::fillDedicatedColors()
 {
 	//////////////////////tu ta funkcja z do≥u od GÍdüby
-	//changePalette(SDL_Color** pixmap);
+	//changePalette(SDL_Color** pixelMap);
 }
 struct Pixel24 {
 	char R;
@@ -165,7 +166,7 @@ Pixel24List* getListElement(int index) {
 	return toReturn;
 }
 
-void ImageConverter::changePalette(SDL_Color** pixmap) {
+void ImageConverter::changePalette(SDL_Color** pixelMap) {
 	// Sort
 	char r = rgbmax.R - rgbmin.R;
 	char g = rgbmax.G - rgbmin.G;
@@ -177,9 +178,9 @@ void ImageConverter::changePalette(SDL_Color** pixmap) {
 		for (int j = 0; j < imageWidth; j++) {
 			if (r >= g && r >= b) { // R
 				Pixel24List* n = (Pixel24List*)malloc(sizeof(Pixel24List));
-				n->pixel.R = pixmap[i][j].r;
-				n->pixel.G = pixmap[i][j].g;
-				n->pixel.B = pixmap[i][j].b;
+				n->pixel.R = pixelMap[i][j].r;
+				n->pixel.G = pixelMap[i][j].g;
+				n->pixel.B = pixelMap[i][j].b;
 				n->next = NULL;
 				if (PList == NULL) {
 					PList = n;
@@ -205,9 +206,9 @@ void ImageConverter::changePalette(SDL_Color** pixmap) {
 			}
 			else if (g >= r && g >= b) { // G
 				Pixel24List* n = (Pixel24List*)malloc(sizeof(Pixel24List));
-				n->pixel.R = pixmap[i][j].r;
-				n->pixel.G = pixmap[i][j].g;
-				n->pixel.B = pixmap[i][j].b;
+				n->pixel.R = pixelMap[i][j].r;
+				n->pixel.G = pixelMap[i][j].g;
+				n->pixel.B = pixelMap[i][j].b;
 				n->next = NULL;
 				if (PList == NULL) {
 					PList = n;
@@ -233,9 +234,9 @@ void ImageConverter::changePalette(SDL_Color** pixmap) {
 			}
 			else { // B
 				Pixel24List* n = (Pixel24List*)malloc(sizeof(Pixel24List));
-				n->pixel.R = pixmap[i][j].r;
-				n->pixel.G = pixmap[i][j].g;
-				n->pixel.B = pixmap[i][j].b;
+				n->pixel.R = pixelMap[i][j].r;
+				n->pixel.G = pixelMap[i][j].g;
+				n->pixel.B = pixelMap[i][j].b;
 				n->next = NULL;
 				if (PList == NULL) {
 					PList = n;
