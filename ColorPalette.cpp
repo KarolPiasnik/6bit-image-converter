@@ -113,8 +113,7 @@ void ImageConverter::medianCut()
 		break;
 	}
 	
-	for (int i = 0; i < dedicated.size(); ++i)
-		cout << +dedicated[i].r << " " << +dedicated[i].g << " " << +dedicated[i].b << endl;
+	
 	
 }
 
