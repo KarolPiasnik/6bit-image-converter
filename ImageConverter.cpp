@@ -190,17 +190,6 @@ void ImageConverter::byteRunDecompress(Data * img)
 	*img = res;
 }
 
-Data ImageConverter::standardColorAttachHeader(Data imageData)
-{
-	Header header = Header();
-	header.setType(0);
-	header.setFileSize(imageData.length + 17);
-	header.setBeginning(17);
-	header.setImageSize(imageWidth, imageHeight);
-	header.setColorSet(0);
-
-	return header.byteData += imageData;
-}
 
 void ImageConverter::loadBMP(char const * filename)
 {
