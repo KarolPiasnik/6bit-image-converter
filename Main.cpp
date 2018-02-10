@@ -37,15 +37,48 @@ int main(int argc, char * argv[])
 	bool isProgramToBeClosed = false;
 	while (!isProgramToBeClosed)
 	{
+
+
 		validateFilename(filename);
 		ImageConverter converter(filename.c_str());
 
 		char paletteChoice;
 		choosePalette(paletteChoice);
 
+		switch (paletteChoice)
+		{
+		case '1':
+			cout << "Converting to predefined palette"<<endl;
+			break;
+		case '2':
+			cout << "Converting to dedicated palette" << endl;
+			break;
+		case '3':
+			cout << "Converting to gray scale palette" << endl;
+			break;
+		default:
+			cout << "Incorrect choice" << endl;
+		}
+
 		char saveOptionChoice;
 		bool isAveragePredictorChosen = false;
+
 		chooseSaveOption(saveOptionChoice, isAveragePredictorChosen);
+
+		switch (saveOptionChoice)
+		{
+		case '1':
+			cout << "Saving to bmp file" << endl;
+			break;
+		case '2':
+			cout << "Saving to karol file" << endl;
+			break;
+		default:
+			cout << "Image won't be saved" << endl;
+		}
+
+		displayFurtherInstructions();
+
 
 		// message processing loop
 		SDL_Event event;

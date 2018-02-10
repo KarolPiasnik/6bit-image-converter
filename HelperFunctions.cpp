@@ -113,7 +113,6 @@ void chooseSaveOption(char & selection, bool & isAveragePredictorChosen)
 
 	cin.ignore(INT_MAX, '\n');
 	cout << endl;
-	displayFurtherInstructions();
 }
 
 void displayFurtherInstructions()
