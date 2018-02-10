@@ -190,6 +190,18 @@ void ImageConverter::byteRunDecompress(Data * img)
 	*img = res;
 }
 
+void ImageConverter::predefinedTransform()
+{
+}
+
+void ImageConverter::dedicatedTransform()
+{
+}
+
+
+void ImageConverter::grayScaleTransform()
+{
+}
 
 void ImageConverter::loadBMP(char const * filename)
 {
