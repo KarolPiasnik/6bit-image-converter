@@ -216,10 +216,8 @@ void ImageConverter::dedicatedTransform()
 	for (int i = 0; i < imageWidth; ++i) {
 		for (int j = 0; j < imageHeight; ++j) {
 			pixel = getPixel(i, j);
-			newPixel = 0;
-			newPixel += (pixel.r / 64) << 4;
-			newPixel += (pixel.g / 64) << 2;
-			newPixel += (pixel.b / 64);
+			newPixel = pixel.r/4;
+			
 			setPixel(i, j, dedicated[newPixel]);
 		}
 	}
