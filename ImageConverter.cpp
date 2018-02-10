@@ -106,7 +106,7 @@ SDL_Color ImageConverter::getPixel(int x, int y)
 	return (color);
 }
 
-int ImageConverter::byteRunCompress(Data * img)
+void ImageConverter::byteRunCompress(Data * img)
 {
 	int i = 0;
 	int d = 0;
@@ -155,10 +155,10 @@ int ImageConverter::byteRunCompress(Data * img)
 			i += j;
 		}
 	}
-	return d;
+	img->length = d;
 }
 
-Data ImageConverter::ByteRunDecompress(Data * img)
+void ImageConverter::byteRunDecompress(Data * img)
 {
 	int i = 0;
 	vector <char> r;
@@ -186,8 +186,8 @@ Data ImageConverter::ByteRunDecompress(Data * img)
 			i += img->data[i] + 2;
 		}
 	}
-	Data res(r);
-	return res;
+	Data  res =  Data(r);
+	*img = res;
 }
 
 Data ImageConverter::standardColorAttachHeader(Data imageData)

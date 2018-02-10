@@ -25,8 +25,8 @@ public:
 	void setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B);
 	void setPixel(int x, int y, SDL_Color C);
 	SDL_Color getPixel(int x, int y);
-	int byteRunCompress(Data * image);
-	Data ByteRunDecompress(Data * image);
+	static void byteRunCompress(Data * image);
+	static void byteRunDecompress(Data * image);
 	Data standardColorAttachHeader(Data imageData);
 	void loadBMP(char const * filename);
 	void clearScreen();
