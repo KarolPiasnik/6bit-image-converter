@@ -3,74 +3,25 @@
 #include <iostream>
 
 
-void ImageConverter::_medianCut(vector<SDL_Color> pixels, int numberOfColors = 64, int currentNumber = 1)
-{
-	if (numberOfColors == currentNumber) 
+void ImageConverter::_medianCut(vector<SDL_Color>::iterator start, vector<SDL_Color>::iterator end, int numberOfColors = 64, int currentNumber = 1)
+{	
+	int size = end - start;
+	vector<SDL_Color>::iterator current = start;
+	int maxr = 0, maxg = 0, maxb = 0, minr = 255, ming = 255, minb = 255;
+	for (vector<SDL_Color>::iterator tmp = start; tmp < end; ++tmp) 
 	{
-		long int sumr = 0;
-		long int sumg = 0;
-		long int sumb = 0;
-
-		for (int i = 0; i < pixels.size(); ++i)
-		{
-			sumr += pixels[i].r;
-			sumg += pixels[i].g;
-			sumb += pixels[i].b;
-		}
-
-		SDL_Color resultColor;
-		resultColor.r = sumr / pixels.size();
-		resultColor.g = sumg / pixels.size();
-		resultColor.b = sumb / pixels.size();
-		dedicated.push_back(resultColor);
-
-
-			
-		
-
-	}
-	else 
-	{
-		vector<SDL_Color> pixelsUpper;
-		vector<SDL_Color> pixelsLower;
-		for (int i = 0; i < pixels.size(); ++i)
-		{
-			if (i < pixels.size() / 2)
-				pixelsUpper.push_back(pixels[i]);
-			else
-				pixelsLower.push_back(pixels[i]);
-
-		}
-
-		_medianCut(pixelsLower, numberOfColors, currentNumber * 2);
-		_medianCut(pixelsUpper, numberOfColors, currentNumber * 2);
-
-	}
-	
-}
-
-void ImageConverter::medianCut() 
-{
-	int maxr = 0 , maxg = 0, maxb = 0, minr = 255, ming = 255, minb = 255;
-	vector<SDL_Color> pixels = {};
-	SDL_Color pixel;
-	for (int i = 0; i < imageWidth; ++i) { //getting minimums, maximums a all pixels
-		for (int j = 0; j < imageHeight; ++j) {
-			pixel = getPixel(i, j);
-			if (maxr < pixel.r)
-				maxr = pixel.r;
-			if (maxb < pixel.b)
-				maxb = pixel.b;
-			if (maxg < pixel.g)
-				maxg = pixel.g;
-			if (minr > pixel.r)
-				minr = pixel.r;
-			if (ming > pixel.g)
-				ming = pixel.g;
-			if (maxb > pixel.b)
-				minb = pixel.b;
-			pixels.push_back(pixel);
-		}
+		if (maxr < tmp->r)
+			maxr = tmp->r;
+		if (maxb < tmp->b)
+			maxb = tmp->b;
+		if (maxg < tmp->g)
+			maxg = tmp->g;
+		if (minr > tmp->r)
+			minr = tmp->r;
+		if (ming > tmp->g)
+			ming = tmp->g;
+		if (maxb > tmp->b)
+			minb = tmp->b;
 	}
 
 	char order; //chosing by which color value sort
@@ -81,40 +32,64 @@ void ImageConverter::medianCut()
 	else if (maxr - minr > maxg - ming && maxr - minr > maxb - minb) {
 		order = 'r';
 	}
-	else  {
+	else {
 		order = 'g';
 	}
-
-	switch (order) 
-	{
-	case 'r':
-		std::sort(pixels.begin(), pixels.end(), [](const SDL_Color &x, const SDL_Color &y) { return (x.r < y.r); });
-		break;
-	case 'g':
-		std::sort(pixels.begin(), pixels.end(), [](const SDL_Color &x, const SDL_Color &y) { return (x.r < y.r); });
-		break;
-	case 'b':
-		std::sort(pixels.begin(), pixels.end(), [](const SDL_Color &x, const SDL_Color &y) { return (x.r < y.r); });
-		break;
-	}
-
-	_medianCut(pixels);
 
 	switch (order)
 	{
 	case 'r':
-		std::sort(dedicated.begin(), dedicated.end(), [](const SDL_Color &x, const SDL_Color &y) { return (x.r < y.r); });
+		std::sort(start, end, [](const SDL_Color &x, const SDL_Color &y) { return (x.r < y.r); });
 		break;
 	case 'g':
-		std::sort(dedicated.begin(), dedicated.end(), [](const SDL_Color &x, const SDL_Color &y) { return (x.r < y.r); });
+		std::sort(start, end, [](const SDL_Color &x, const SDL_Color &y) { return (x.g < y.g); });
 		break;
 	case 'b':
-		std::sort(dedicated.begin(), dedicated.end(), [](const SDL_Color &x, const SDL_Color &y) { return (x.r < y.r); });
+		std::sort(start, end, [](const SDL_Color &x, const SDL_Color &y) { return (x.b < y.b); });
 		break;
 	}
+
+	if (numberOfColors == currentNumber) 
+	{
+		long int sumr = 0;
+		long int sumg = 0;
+		long int sumb = 0;
+
+		for (int i = 0; current != end; ++current)
+		{
+			sumr += current->r;
+			sumg += current->g;
+			sumb += current->b;
+		}
+
+		SDL_Color resultColor;
+		resultColor.r = sumr / size;
+		resultColor.g = sumg / size;
+		resultColor.b = sumb / size;
+		dedicated.push_back(resultColor);
+
+	}
+	else 
+	{
+		
+		_medianCut(start,start+size/2, numberOfColors, currentNumber * 2);
+		_medianCut(start + size / 2 + 1, end, numberOfColors, currentNumber * 2);
+
+	}
 	
-	
-	
+}
+
+void ImageConverter::medianCut() 
+{
+	vector<SDL_Color> pixels = {};
+	SDL_Color pixel;
+	for (int i = 0; i < imageWidth; ++i) { //getting minimums, maximums a all pixels
+		for (int j = 0; j < imageHeight; ++j) {			
+			pixels.push_back(getPixel(i,j));
+		}
+	}
+
+	_medianCut(pixels.begin(), pixels.end());
 }
 
 
@@ -253,6 +228,7 @@ void ImageConverter::fillArrays()
 	predefined[63] = { 252,252,252 };
 
 	medianCut();
+	
 }
 
 

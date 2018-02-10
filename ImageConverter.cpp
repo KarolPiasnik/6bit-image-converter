@@ -1,5 +1,6 @@
 ﻿#include "ImageConverter.h"
 #include "Header.h"
+#include <cmath>
 
 ImageConverter::ImageConverter(const char * filename)
 {
@@ -212,15 +213,33 @@ void ImageConverter::dedicatedTransform()
 {
 	SDL_Color pixel;
 	uint8_t newPixel;
+	double minDistance;
+	int closest;
+	int distance;
 
 	for (int i = 0; i < imageWidth; ++i) {
 		for (int j = 0; j < imageHeight; ++j) {
+			minDistance = 1000;
+			closest = 65;
+			distance = 0;
 			pixel = getPixel(i, j);
-			newPixel = pixel.r/4;
+
+			for (int k = 0; k < 64; ++k)
+			{
+				distance = sqrt(pow((dedicated[k].r - pixel.r)*0.3, 2) + pow((dedicated[k].r - pixel.r)*0.59, 2) + pow((dedicated[k].r - pixel.r)*0.11, 2));
+				if (distance < minDistance) 
+				{
+					closest = k;
+					minDistance = distance;
+				}
+
+			}
 			
-			setPixel(i, j, dedicated[newPixel]);
+			setPixel(i, j, dedicated[closest]);
 		}
 	}
+
+	
 	SDL_Flip(screen);
 
 
