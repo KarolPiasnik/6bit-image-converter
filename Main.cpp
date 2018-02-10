@@ -33,7 +33,7 @@ int main(int argc, char * argv[])
 	atexit(SDL_Quit);
 
 	string filename;
-	da
+	
 	bool isProgramToBeClosed = false;
 	while (!isProgramToBeClosed)
 	{
