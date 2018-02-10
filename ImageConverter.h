@@ -16,8 +16,8 @@ public:
 	int imageWidth;
 	int imageHeight;
 	SDL_Color grayScale[64];
-	SDL_Color standardColors[64];
-	SDL_Color dedicatedColors[64];
+	SDL_Color predefined[64];
+	SDL_Color dedicated[64];
 	SDL_Surface * bmp;
 	int fileSize;
 	fstream file;
