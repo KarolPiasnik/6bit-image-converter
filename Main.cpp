@@ -53,9 +53,11 @@ int main(int argc, char * argv[])
 			break;
 		case '2':
 			cout << "Converting to dedicated palette" << endl;
+			converter.dedicatedTransform();
 			break;
 		case '3':
 			cout << "Converting to gray scale palette" << endl;
+			converter.grayScaleTransform();
 			break;
 		default:
 			cout << "Incorrect choice" << endl;

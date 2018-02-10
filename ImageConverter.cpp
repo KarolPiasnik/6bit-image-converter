@@ -216,6 +216,17 @@ void ImageConverter::dedicatedTransform()
 
 void ImageConverter::grayScaleTransform()
 {
+	double g;
+	SDL_Color pixel;
+
+	for (int i = 0; i < imageWidth; ++i) {
+		for (int j = 0; j < imageHeight; ++j) {
+			pixel = getPixel(i, j);
+			g = 0.21*pixel.r + 0.72*pixel.g + 0.07* pixel.b;
+			setPixel(i, j, grayScale[int(round(g)) / 4].r, grayScale[int(round(g)) / 4].g, grayScale[int(round(g)) / 4].b);
+		}
+	}
+	SDL_Flip(screen);
 }
 
 void ImageConverter::loadBMP(char const * filename)
