@@ -49,6 +49,7 @@ int main(int argc, char * argv[])
 		{
 		case '1':
 			cout << "Converting to predefined palette"<<endl;
+			converter.predefinedTransform();
 			break;
 		case '2':
 			cout << "Converting to dedicated palette" << endl;

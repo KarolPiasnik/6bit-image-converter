@@ -192,10 +192,25 @@ void ImageConverter::byteRunDecompress(Data * img)
 
 void ImageConverter::predefinedTransform()
 {
+	SDL_Color pixel ;
+	uint8_t newPixel;
+
+	for (int i = 0; i < imageWidth; ++i) {
+		for (int j = 0; j < imageHeight; ++j) {
+			pixel = getPixel(i, j);
+			newPixel = 0;
+			newPixel += (pixel.r / 64) << 4;
+			newPixel += (pixel.g / 64) << 2;
+			newPixel += (pixel.b / 64);
+			setPixel(i, j, predefined[newPixel]);
+		}
+	}
+	SDL_Flip(screen);
 }
 
 void ImageConverter::dedicatedTransform()
 {
+
 }
 
 
