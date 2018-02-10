@@ -33,6 +33,4 @@ public:
 	void loadBMP(char const * filename);
 	void clearScreen();
 	void fillArrays();
-	void fillDedicatedColors();
-	void changePalette(SDL_Color ** pixelMap);
 };

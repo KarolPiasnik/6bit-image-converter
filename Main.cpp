@@ -61,6 +61,7 @@ int main(int argc, char * argv[])
 			break;
 		default:
 			cout << "Incorrect choice" << endl;
+			break;
 		}
 
 		char saveOptionChoice;
@@ -78,6 +79,7 @@ int main(int argc, char * argv[])
 			break;
 		default:
 			cout << "Image won't be saved" << endl;
+			break;
 		}
 
 		displayFurtherInstructions();
