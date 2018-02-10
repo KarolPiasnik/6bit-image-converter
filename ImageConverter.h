@@ -17,7 +17,7 @@ public:
 	int imageHeight;
 	SDL_Color grayScale[64];
 	SDL_Color predefined[64];
-	SDL_Color dedicated[64];
+	vector<SDL_Color> dedicated;
 	SDL_Surface * bmp;
 	int fileSize;
 	fstream file;
@@ -33,4 +33,6 @@ public:
 	void loadBMP(char const * filename);
 	void clearScreen();
 	void fillArrays();
+	void medianCut();
+	void _medianCut(vector<SDL_Color> pixels, int numberOfColors, int currentNumber);
 };

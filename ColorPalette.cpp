@@ -1,4 +1,125 @@
 #include "ImageConverter.h"
+#include <algorithm>
+#include <iostream>
+
+
+void ImageConverter::_medianCut(vector<SDL_Color> pixels, int numberOfColors = 64, int currentNumber = 1)
+{
+	if (numberOfColors == currentNumber) 
+	{
+		long int sumr = 0;
+		long int sumg = 0;
+		long int sumb = 0;
+
+		for (int i = 0; i < pixels.size(); ++i)
+		{
+			sumr += pixels[i].r;
+			sumg += pixels[i].g;
+			sumb += pixels[i].b;
+		}
+
+		SDL_Color resultColor;
+		resultColor.r = sumr / pixels.size();
+		resultColor.g = sumg / pixels.size();
+		resultColor.b = sumb / pixels.size();
+		dedicated.push_back(resultColor);
+
+
+			
+		
+
+	}
+	else 
+	{
+		vector<SDL_Color> pixelsUpper;
+		vector<SDL_Color> pixelsLower;
+		for (int i = 0; i < pixels.size(); ++i)
+		{
+			if (i < pixels.size() / 2)
+				pixelsUpper.push_back(pixels[i]);
+			else
+				pixelsLower.push_back(pixels[i]);
+
+		}
+
+		_medianCut(pixelsLower, numberOfColors, currentNumber * 2);
+		_medianCut(pixelsUpper, numberOfColors, currentNumber * 2);
+
+	}
+	
+}
+
+void ImageConverter::medianCut() 
+{
+	int maxr = 0 , maxg = 0, maxb = 0, minr = 255, ming = 255, minb = 255;
+	vector<SDL_Color> pixels = {};
+	SDL_Color pixel;
+	for (int i = 0; i < imageWidth; ++i) { //getting minimums, maximums a all pixels
+		for (int j = 0; j < imageHeight; ++j) {
+			pixel = getPixel(i, j);
+			if (maxr < pixel.r)
+				maxr = pixel.r;
+			if (maxb < pixel.b)
+				maxb = pixel.b;
+			if (maxg < pixel.g)
+				maxg = pixel.g;
+			if (minr > pixel.r)
+				minr = pixel.r;
+			if (ming > pixel.g)
+				ming = pixel.g;
+			if (maxb > pixel.b)
+				minb = pixel.b;
+			pixels.push_back(pixel);
+		}
+	}
+
+	char order; //chosing by which color value sort
+
+	if (maxb - minb > maxg - ming && maxb - minb > maxr - minr) {
+		order = 'b';
+	}
+	else if (maxr - minr > maxg - ming && maxr - minr > maxb - minb) {
+		order = 'r';
+	}
+	else  {
+		order = 'g';
+	}
+
+	switch (order) 
+	{
+	case 'r':
+		std::sort(pixels.begin(), pixels.end(), [](const SDL_Color &x, const SDL_Color &y) { return (x.r < y.r); });
+		break;
+	case 'g':
+		std::sort(pixels.begin(), pixels.end(), [](const SDL_Color &x, const SDL_Color &y) { return (x.r < y.r); });
+		break;
+	case 'b':
+		std::sort(pixels.begin(), pixels.end(), [](const SDL_Color &x, const SDL_Color &y) { return (x.r < y.r); });
+		break;
+	}
+
+	_medianCut(pixels);
+
+	switch (order)
+	{
+	case 'r':
+		std::sort(dedicated.begin(), dedicated.end(), [](const SDL_Color &x, const SDL_Color &y) { return (x.r < y.r); });
+		break;
+	case 'g':
+		std::sort(dedicated.begin(), dedicated.end(), [](const SDL_Color &x, const SDL_Color &y) { return (x.r < y.r); });
+		break;
+	case 'b':
+		std::sort(dedicated.begin(), dedicated.end(), [](const SDL_Color &x, const SDL_Color &y) { return (x.r < y.r); });
+		break;
+	}
+	
+	for (int i = 0; i < dedicated.size(); ++i)
+		cout << +dedicated[i].r << " " << +dedicated[i].g << " " << +dedicated[i].b << endl;
+	
+}
+
+
+
 
 void ImageConverter::fillArrays()
 {
@@ -132,6 +253,9 @@ void ImageConverter::fillArrays()
 	predefined[62] = { 252,252,168 };
 	predefined[63] = { 252,252,252 };
 
+	medianCut();
 }
+
+
 
 
