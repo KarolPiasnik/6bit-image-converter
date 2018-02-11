@@ -8,23 +8,18 @@ bool obtainFileStatus(const string & name)
 
 void validateFilename(string & name)
 {
-	system("cls");
-
 	string firstExtension = "bmp";
 	string secondExtension = "karol";
 	int firstExtensionLength = firstExtension.length();
 	int secondExtensionLength = secondExtension.length();
 
-	cout << "- Now you will be asked to enter a name of a file to be processed. " << endl
-		<< "- If there are two files sharing the same filename and one of them has .bmp and another .karol extension" << endl
-		<< "  then the file with .bmp extension will be chosen." << endl
-		<< "- If you want to override this behaviour you have to explicitly type filename with desired extension." << endl << endl
-		<< "Please enter the name of the image to be processed: ";
+	displayHint();
+	displayInputRequest();
 
 	do
 	{
-		cin >> name;
-
+		getline(cin, name);
+		
 		// '.' not found
 		if (name.find('.') == string::npos)
 		{
@@ -56,9 +51,11 @@ void validateFilename(string & name)
 				break;
 			}
 		}
-	} while (cout << "Enter the proper name of the file!" << endl);
 
-	cin.ignore(INT_MAX, '\n');
+		displayHint();
+		displayInputRequestOnFailure();
+	} while (true);
+
 	cout << endl;
 }
 
@@ -113,6 +110,26 @@ void chooseSaveOption(char & selection, bool & isAveragePredictorChosen)
 
 	cin.ignore(INT_MAX, '\n');
 	cout << endl;
+}
+
+void displayHint()
+{
+	system("cls");
+
+	cout << "- Now you will be asked to enter a name of a file to be processed. " << endl
+		<< "- If there are two files sharing the same filename and one of them has .bmp and another .karol extension" << endl
+		<< "  then the file with .bmp extension will be chosen." << endl
+		<< "- If you want to override this behaviour you have to explicitly type filename with desired extension." << endl << endl;
+}
+
+void displayInputRequest()
+{
+	cout << "Please enter the name of the image to be processed: ";
+}
+
+void displayInputRequestOnFailure()
+{
+	cout << "Enter the proper name of the file!" << endl;
 }
 
 void displayFurtherInstructions()

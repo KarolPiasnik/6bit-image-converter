@@ -12,4 +12,8 @@ void validateFilename(string &);
 
 void choosePalette(char &);
 void chooseSaveOption(char &, bool &);
+
+void displayHint();
+void displayInputRequest();
+void displayInputRequestOnFailure();
 void displayFurtherInstructions();

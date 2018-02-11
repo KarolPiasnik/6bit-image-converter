@@ -14,17 +14,16 @@ using namespace std;
 
 int main(int argc, char * argv[])
 {
-
-	Data data ;
-	char sample[50] = { 1, 1, 1, 0, 5, 1, 2, 3, 4, 5, 6, 7, 7, 7, 8, 8, 8, 8, 8, 8, 2, 1, 3, 100 };
+	Data data;
+	char sample[50] = {1, 1, 1, 0, 5, 1, 2, 3, 4, 5, 6, 7, 7, 7, 8, 8, 8, 8, 8, 8, 2, 1, 3, 100};
 	data.data = sample;
 	data.length = 23;
+
 	for (int i = 0; i < data.length; ++i)
 	{
 		continue;
 	}
 
-	
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	{
 		cout << "SDL initialization failed. SDL Error: " << SDL_GetError() << endl;
@@ -33,12 +32,10 @@ int main(int argc, char * argv[])
 	atexit(SDL_Quit);
 
 	string filename;
-	
+
 	bool isProgramToBeClosed = false;
 	while (!isProgramToBeClosed)
 	{
-
-
 		validateFilename(filename);
 		ImageConverter converter(filename.c_str());
 
@@ -48,19 +45,19 @@ int main(int argc, char * argv[])
 		switch (paletteChoice)
 		{
 		case '1':
-			cout << "Converting to predefined palette"<<endl;
+			cout << "- Converting to predefined palette..." << endl << endl;
 			converter.predefinedTransform();
 			break;
 		case '2':
-			cout << "Converting to dedicated palette" << endl;
+			cout << "- Converting to dedicated palette..." << endl << endl;
 			converter.dedicatedTransform();
 			break;
 		case '3':
-			cout << "Converting to gray scale palette" << endl;
+			cout << "- Converting to gray scale palette..." << endl << endl;
 			converter.grayScaleTransform();
 			break;
 		default:
-			cout << "Incorrect choice" << endl;
+			cout << "- Incorrect choice." << endl << endl;
 			break;
 		}
 
@@ -72,19 +69,18 @@ int main(int argc, char * argv[])
 		switch (saveOptionChoice)
 		{
 		case '1':
-			cout << "Saving to bmp file" << endl;
-			converter.saveToBmp("SavingFile.bmp");
+			cout << "- Saving to .bmp file." << endl << endl;
+			converter.saveToBmp("Result.bmp");
 			break;
 		case '2':
-			cout << "Saving to karol file" << endl;
+			cout << "- Saving to .karol file." << endl << endl;
 			break;
 		default:
-			cout << "Image won't be saved" << endl;
+			cout << "- Image won't be saved." << endl << endl;
 			break;
 		}
 
 		displayFurtherInstructions();
-
 
 		// message processing loop
 		SDL_Event event;
