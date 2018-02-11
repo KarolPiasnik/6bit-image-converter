@@ -34,5 +34,6 @@ public:
 	void clearScreen();
 	void fillArrays();
 	void medianCut();
+	void saveToBmp(const char * name);
 	void _medianCut(vector<SDL_Color>::iterator begin, vector<SDL_Color>::iterator end, int numberOfColors, int currentNumber);
 };

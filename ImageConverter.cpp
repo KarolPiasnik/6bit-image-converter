@@ -275,6 +275,11 @@ void ImageConverter::clearScreen()
 	SDL_Flip(screen);
 }
 
+void ImageConverter::saveToBmp(const char* name) 
+{
+	SDL_SaveBMP(screen, name);
+}
+
 /*
 Data standard(string name, bool compress) {
 	std::ofstream myFile(name.c_str(),  std::ofstream::binary);

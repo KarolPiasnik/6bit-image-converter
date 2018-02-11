@@ -73,6 +73,7 @@ int main(int argc, char * argv[])
 		{
 		case '1':
 			cout << "Saving to bmp file" << endl;
+			converter.saveToBmp("SavingFile.bmp");
 			break;
 		case '2':
 			cout << "Saving to karol file" << endl;
