@@ -1,8 +1,8 @@
 #include <SDL.h>
 #include <iostream>
 #include <string>
-#include <stdlib.h>
 #include <windows.h>
+#include <stdlib.h>
 #include "ImageConverter.h"
 #include "HelperFunctions.h"
 

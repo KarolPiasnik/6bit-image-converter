@@ -93,8 +93,6 @@ void ImageConverter::medianCut()
 }
 
 
-
-
 void ImageConverter::fillArrays()
 {
 	grayScale[0] = { 0,0,0 };
