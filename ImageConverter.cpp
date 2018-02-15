@@ -226,7 +226,7 @@ void ImageConverter::dedicatedTransform()
 
 			for (int k = 0; k < 64; ++k)
 			{
-				distance = sqrt(pow((dedicated[k].r - pixel.r)*0.3, 2) + pow((dedicated[k].r - pixel.r)*0.59, 2) + pow((dedicated[k].r - pixel.r)*0.11, 2));
+				distance = sqrt(pow((dedicated[k].r - pixel.r)*0.3, 2) + pow((dedicated[k].g - pixel.g)*0.59, 2) + pow((dedicated[k].b - pixel.b)*0.11, 2));
 				if (distance < minDistance) 
 				{
 					closest = k;

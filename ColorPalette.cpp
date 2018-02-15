@@ -20,7 +20,7 @@ void ImageConverter::_medianCut(vector<SDL_Color>::iterator start, vector<SDL_Co
 			minr = tmp->r;
 		if (ming > tmp->g)
 			ming = tmp->g;
-		if (maxb > tmp->b)
+		if (minb > tmp->b)
 			minb = tmp->b;
 	}
 
