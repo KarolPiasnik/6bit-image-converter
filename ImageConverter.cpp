@@ -241,17 +241,14 @@ Data ImageConverter::dedicatedTransform()
 			setPixel(i, j, dedicated[closest]);
 		}
 	}
-
 	
 	SDL_Flip(screen);
 	return result;
 
-
-
 }
 
 
-void ImageConverter::grayScaleTransform()
+Data ImageConverter::grayScaleTransform()
 {
 	double g;
 	SDL_Color pixel;
