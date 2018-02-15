@@ -191,11 +191,10 @@ void ImageConverter::byteRunDecompress(Data * img)
 	*img = res;
 }
 
-Data ImageConverter::predefinedTransform()
+void ImageConverter::predefinedTransform()
 {
 	SDL_Color pixel ;
 	uint8_t newPixel;
-	Data result = Data(imageHeight*imageWidth);
 
 	for (int i = 0; i < imageWidth; ++i) {
 		for (int j = 0; j < imageHeight; ++j) {
@@ -208,18 +207,16 @@ Data ImageConverter::predefinedTransform()
 		}
 	}
 	SDL_Flip(screen);
-	return result;
-
 }
 
-Data ImageConverter::dedicatedTransform()
+void ImageConverter::dedicatedTransform()
 {
 	SDL_Color pixel;
 	uint8_t newPixel;
 	double minDistance;
 	int closest;
 	int distance;
-	Data result = Data(imageHeight*imageWidth);
+
 	for (int i = 0; i < imageWidth; ++i) {
 		for (int j = 0; j < imageHeight; ++j) {
 			minDistance = 1000;
@@ -244,8 +241,6 @@ Data ImageConverter::dedicatedTransform()
 
 	
 	SDL_Flip(screen);
-	return result;
-
 
 
 }
@@ -255,7 +250,6 @@ void ImageConverter::grayScaleTransform()
 {
 	double g;
 	SDL_Color pixel;
-	Data result = Data(imageHeight*imageWidth);
 
 	for (int i = 0; i < imageWidth; ++i) {
 		for (int j = 0; j < imageHeight; ++j) {
@@ -265,8 +259,6 @@ void ImageConverter::grayScaleTransform()
 		}
 	}
 	SDL_Flip(screen);
-
-	return result;
 }
 
 void ImageConverter::loadBMP(char const * filename)
