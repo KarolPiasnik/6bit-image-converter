@@ -1,6 +1,8 @@
 ﻿#include "ImageConverter.h"
+#include "HelperFunctions.h"
 #include "Header.h"
 #include <cmath>
+#include <iomanip>
 
 ImageConverter::ImageConverter(const char * filename)
 {
@@ -89,7 +91,7 @@ void ImageConverter::setPixel(int x, int y, SDL_Color C)
 
 SDL_Color ImageConverter::getPixel(int x, int y)
 {
-	SDL_Color color;
+	SDL_Color color = {0, 0, 0};
 	Uint32 col = 0;
 	if ((x >= 0) && (x < screenWidth) && (y >= 0) && (y < screenHeight))
 	{
@@ -104,6 +106,7 @@ SDL_Color ImageConverter::getPixel(int x, int y)
 		//convert color
 		SDL_GetRGB(col, screen->format, &color.r, &color.g, &color.b);
 	}
+
 	return (color);
 }
 
@@ -187,24 +190,28 @@ void ImageConverter::byteRunDecompress(Data * img)
 			i += img->data[i] + 2;
 		}
 	}
-	Data  res =  Data(r);
+	Data  res = Data(r);
 	*img = res;
 }
 
 Data ImageConverter::predefinedTransform()
 {
-	SDL_Color pixel ;
+	SDL_Color pixel;
 	uint8_t newPixel;
 	Data result = Data(imageHeight*imageWidth);
 
-	for (int i = 0; i < imageWidth; ++i) {
-		for (int j = 0; j < imageHeight; ++j) {
+	for (int i = 0; i < imageWidth; ++i)
+	{
+		for (int j = 0; j < imageHeight; ++j)
+		{
 			pixel = getPixel(i, j);
 			newPixel = 0;
 			newPixel += (pixel.r / 64) << 4;
 			newPixel += (pixel.g / 64) << 2;
 			newPixel += (pixel.b / 64);
-			setPixel(i, j, predefined[newPixel]);
+			setPixel(i, j, imposedPalette[newPixel]);
+			result.data[i*imageHeight + j] = newPixel;
+
 		}
 	}
 	SDL_Flip(screen);
@@ -220,8 +227,10 @@ Data ImageConverter::dedicatedTransform()
 	int closest;
 	int distance;
 	Data result = Data(imageHeight*imageWidth);
-	for (int i = 0; i < imageWidth; ++i) {
-		for (int j = 0; j < imageHeight; ++j) {
+	for (int i = 0; i < imageWidth; ++i)
+	{
+		for (int j = 0; j < imageHeight; ++j)
+		{
 			minDistance = 1000;
 			closest = 65;
 			distance = 0;
@@ -229,19 +238,21 @@ Data ImageConverter::dedicatedTransform()
 
 			for (int k = 0; k < 64; ++k)
 			{
-				distance = sqrt(pow((dedicated[k].r - pixel.r)*0.3, 2) + pow((dedicated[k].g - pixel.g)*0.59, 2) + pow((dedicated[k].b - pixel.b)*0.11, 2));
-				if (distance < minDistance) 
+				distance = sqrt(pow((dedicatedPalette[k].r - pixel.r)*0.3, 2) + pow((dedicatedPalette[k].g - pixel.g)*0.59, 2) + pow((dedicatedPalette[k].b - pixel.b)*0.11, 2));
+				if (distance < minDistance)
 				{
 					closest = k;
 					minDistance = distance;
 				}
 
 			}
-			
-			setPixel(i, j, dedicated[closest]);
+
+			setPixel(i, j, dedicatedPalette[closest]);
+			result.data[i*imageHeight + j] = closest;
+
 		}
 	}
-	
+
 	SDL_Flip(screen);
 	return result;
 
@@ -254,11 +265,14 @@ Data ImageConverter::grayScaleTransform()
 	SDL_Color pixel;
 	Data result = Data(imageHeight*imageWidth);
 
-	for (int i = 0; i < imageWidth; ++i) {
-		for (int j = 0; j < imageHeight; ++j) {
+	for (int i = 0; i < imageWidth; ++i)
+	{
+		for (int j = 0; j < imageHeight; ++j)
+		{
 			pixel = getPixel(i, j);
 			g = 0.21*pixel.r + 0.72*pixel.g + 0.07* pixel.b;
 			setPixel(i, j, grayScale[int(round(g)) / 4].r, grayScale[int(round(g)) / 4].g, grayScale[int(round(g)) / 4].b);
+			result.data[i*imageHeight + j] = int(round(g)) / 4;
 		}
 	}
 	SDL_Flip(screen);
@@ -280,9 +294,180 @@ void ImageConverter::clearScreen()
 	SDL_Flip(screen);
 }
 
-void ImageConverter::saveToBmp(const char* name) 
+void ImageConverter::saveToBmp(const char* name)
 {
 	SDL_SaveBMP(screen, name);
+}
+
+double ImageConverter::countDistance(const SDL_Color & firstColor, const SDL_Color & secondColor)
+{
+	double firstFraction = 0.299;
+	double secondFraction = 0.587;
+	double thirdFraction = 0.114;
+
+	return pow((firstColor.r - secondColor.r) * firstFraction, 2)
+		+ pow((firstColor.g - secondColor.g) * secondFraction, 2)
+		+ pow((firstColor.b - secondColor.b) * thirdFraction, 2);
+}
+
+SDL_Color ImageConverter::findClosestPaletteColor(const SDL_Color & oldColor, char & paletteChoice)
+{
+	switch (paletteChoice)
+	{
+	case '1':
+	{
+		double closestDistance = countDistance(oldColor, imposedPalette[0]);
+		SDL_Color bestColor = imposedPalette[0];
+
+		for (int sentinel = 1; sentinel < 64; ++sentinel)
+		{
+			const double currentDistance = countDistance(oldColor, imposedPalette[sentinel]);
+
+			if (currentDistance < closestDistance)
+			{
+				closestDistance = currentDistance;
+				bestColor = imposedPalette[sentinel];
+			}
+		}
+
+		return bestColor;
+		break;
+	}
+	case '2':
+	{
+		double closestDistance = countDistance(oldColor, dedicatedPalette[0]);
+		SDL_Color bestColor = dedicatedPalette[0];
+
+		for (int sentinel = 1; sentinel < dedicatedPalette.size(); ++sentinel)
+		{
+			const double currentDistance = countDistance(oldColor, dedicatedPalette[sentinel]);
+
+			if (currentDistance < closestDistance)
+			{
+				closestDistance = currentDistance;
+				bestColor = dedicatedPalette[sentinel];
+			}
+		}
+
+		return bestColor;
+		break;
+	}
+	}
+}
+
+void ImageConverter::adjustRange(SDL_Color & oldColor, double & quantErrorR, double & quantErrorG, double & quantErrorB)
+{
+	if (oldColor.r + quantErrorR > 255)
+	{
+		oldColor.r = 255;
+	}
+	else if (oldColor.r + quantErrorR < 0)
+	{
+		oldColor.r = 0;
+	}
+	else
+	{
+		oldColor.r = oldColor.r + quantErrorR;
+	}
+
+	if (oldColor.g + quantErrorG > 255)
+	{
+		oldColor.g = 255;
+	}
+	else if (oldColor.g + quantErrorG < 0)
+	{
+		oldColor.g = 0;
+	}
+	else
+	{
+		oldColor.g = oldColor.g + quantErrorG;
+	}
+
+	if (oldColor.b + quantErrorB > 255)
+	{
+		oldColor.b = 255;
+	}
+	else if (oldColor.b + quantErrorB < 0)
+	{
+		oldColor.b = 0;
+	}
+	else
+	{
+		oldColor.b = oldColor.b + quantErrorB;
+	}
+}
+
+void ImageConverter::dithering(SDL_Color ** inputImage, char & paletteChoice)
+{
+	double firstFraction = 7.0 / 16.0;
+	double secondFraction = 3.0 / 16.0;
+	double thirdFraction = 5.0 / 16.0;
+	double fourthFraction = 1.0 / 16.0;
+
+	// arrays of quantization error for all three RGB colors
+	double ** quantErrorR = create_two_dimensional_array(imageWidth, imageHeight);
+	double ** quantErrorG = create_two_dimensional_array(imageWidth, imageHeight);
+	double ** quantErrorB = create_two_dimensional_array(imageWidth, imageHeight);
+
+	fill_two_dimensional_array_with_value(quantErrorR, imageWidth, imageHeight, 0);
+	fill_two_dimensional_array_with_value(quantErrorG, imageWidth, imageHeight, 0);
+	fill_two_dimensional_array_with_value(quantErrorB, imageWidth, imageHeight, 0);
+
+	for (int y = 0; y < imageHeight; ++y)
+	{
+		for (int x = 0; x < imageWidth; ++x)
+		{
+			SDL_Color oldColor = inputImage[x][y];
+			SDL_Color currentColor = inputImage[x][y];
+
+			// check whether new value has a proper range between 0 and 255 and adjust it if needed
+			adjustRange(currentColor, quantErrorR[x][y], quantErrorG[x][y], quantErrorB[x][y]);
+
+			const SDL_Color newColor = findClosestPaletteColor(currentColor, paletteChoice);
+
+			// setPixel with newColor value (quantization error already added)
+			setPixel(x, y, newColor);
+
+			// calculate current quant error
+			QuantError currentQuantError = {0, 0, 0};
+			currentQuantError.r = oldColor.r - newColor.r;
+			currentQuantError.g = oldColor.g - newColor.g;
+			currentQuantError.b = oldColor.b - newColor.b;
+
+			// add current quant error to neighbouring pixels
+			if (x + 1 < imageWidth)
+			{
+				quantErrorR[x + 1][y] += static_cast<double>(currentQuantError.r) * firstFraction;
+				quantErrorG[x + 1][y] += static_cast<double>(currentQuantError.g) * firstFraction;
+				quantErrorB[x + 1][y] += static_cast<double>(currentQuantError.b) * firstFraction;
+			}
+
+			if (y + 1 < imageHeight)
+			{
+				if (x - 1 >= 0)
+				{
+					quantErrorR[x - 1][y + 1] += static_cast<double>(currentQuantError.r) * secondFraction;
+					quantErrorG[x - 1][y + 1] += static_cast<double>(currentQuantError.g) * secondFraction;
+					quantErrorB[x - 1][y + 1] += static_cast<double>(currentQuantError.b) * secondFraction;
+				}
+
+				quantErrorR[x][y + 1] += static_cast<double>(currentQuantError.r) * thirdFraction;
+				quantErrorG[x][y + 1] += static_cast<double>(currentQuantError.g) * thirdFraction;
+				quantErrorB[x][y + 1] += static_cast<double>(currentQuantError.b) * thirdFraction;
+
+				if (x + 1 < imageWidth)
+				{
+					quantErrorR[x + 1][y + 1] += static_cast<double>(currentQuantError.r) * fourthFraction;
+					quantErrorG[x + 1][y + 1] += static_cast<double>(currentQuantError.g) * fourthFraction;
+					quantErrorB[x + 1][y + 1] += static_cast<double>(currentQuantError.b) * fourthFraction;
+				}
+			}
+		}
+	}
+
+	delete_two_dimensional_array(quantErrorR, imageWidth);
+	delete_two_dimensional_array(quantErrorG, imageWidth);
+	delete_two_dimensional_array(quantErrorB, imageWidth);
 }
 
 /*

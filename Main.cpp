@@ -39,13 +39,16 @@ int main(int argc, char * argv[])
 		validateFilename(filename);
 		ImageConverter converter(filename.c_str());
 
+		SDL_Color ** inputImage = create_two_dimensional_SDL_array(converter.imageWidth, converter.imageHeight);
+		copyCurrentSDLWindow(converter, inputImage, converter.imageWidth, converter.imageHeight);
+
 		char paletteChoice;
 		choosePalette(paletteChoice);
 
 		switch (paletteChoice)
 		{
 		case '1':
-			cout << "- Converting to predefined palette..." << endl << endl;
+			cout << "- Converting to imposed palette..." << endl << endl;
 			converter.predefinedTransform();
 			break;
 		case '2':
@@ -61,9 +64,17 @@ int main(int argc, char * argv[])
 			break;
 		}
 
+		bool isDitheringChosen = false;
+		chooseDithering(isDitheringChosen);
+
+		if (isDitheringChosen)
+		{
+			cout << "- Processing dithering..." << endl << endl;
+			converter.dithering(inputImage, paletteChoice);
+		}
+
 		char saveOptionChoice;
 		bool isAveragePredictorChosen = false;
-
 		chooseSaveOption(saveOptionChoice, isAveragePredictorChosen);
 
 		switch (saveOptionChoice)
@@ -79,7 +90,7 @@ int main(int argc, char * argv[])
 			cout << "- Image won't be saved." << endl << endl;
 			break;
 		}
-
+		
 		displayFurtherInstructions();
 
 		// message processing loop

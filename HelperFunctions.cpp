@@ -1,4 +1,6 @@
 #include "HelperFunctions.h"
+#include "ImageConverter.h"
+#include "Header.h"
 
 bool obtainFileStatus(const string & name)
 {
@@ -19,7 +21,7 @@ void validateFilename(string & name)
 	do
 	{
 		getline(cin, name);
-		
+
 		// '.' not found
 		if (name.find('.') == string::npos)
 		{
@@ -112,6 +114,29 @@ void chooseSaveOption(char & selection, bool & isAveragePredictorChosen)
 	cout << endl;
 }
 
+void chooseDithering(bool & isDitheringChosen)
+{
+	char selection;
+
+	cout << "Choose whether you want a Dithering to be used." << endl;
+	cout << "Please enter one of the following choices:" << endl;
+	cout << "1) yes                        2) no" << endl;
+
+	while (cin >> selection && selection != '1' && selection != '2')
+	{
+		cout << "Please enter a number '1' or '2'";
+		cin.ignore(INT_MAX, '\n');
+	}
+
+	if (selection == '1')
+	{
+		isDitheringChosen = true;
+	}
+
+	cin.ignore(INT_MAX, '\n');
+	cout << endl;
+}
+
 void displayHint()
 {
 	system("cls");
@@ -137,4 +162,117 @@ void displayFurtherInstructions()
 	cout << "While having your SDL window active you can decide which operation will be performed." << endl
 		<< "- To process another image press 'N' on your keyboard." << endl
 		<< "- To end this program press 'ESC' on your keyboard." << endl;
+}
+
+
+double ** create_two_dimensional_array(int rows, int columns)
+{
+	double ** array = nullptr;
+
+	try
+	{
+		array = new double *[rows];
+	}
+
+	catch (bad_alloc & ba)
+	{
+		cout << "Error! (couldn't allocate the dynamic array)" << endl;
+		cout << ba.what() << endl;							//	displays the exact cause
+	}
+
+	for (int sentinel = 0; sentinel < rows; ++sentinel)
+	{
+		try
+		{
+			*(array + sentinel) = new double[columns];
+		}
+
+		catch (bad_alloc & ba)
+		{
+			cout << "Error! (couldn't allocate the dynamic array)" << endl;
+			cout << ba.what() << endl;						//	displays the exact cause
+		}
+
+	}
+
+	return array;
+}
+
+SDL_Color ** create_two_dimensional_SDL_array(int rows, int columns)
+{
+	SDL_Color ** array = nullptr;
+
+	try
+	{
+		array = new SDL_Color *[rows];
+	}
+
+	catch (bad_alloc & ba)
+	{
+		cout << "Error! (couldn't allocate the dynamic array)" << endl;
+		cout << ba.what() << endl;							//	displays the exact cause
+	}
+
+	for (int sentinel = 0; sentinel < rows; ++sentinel)
+	{
+		try
+		{
+			*(array + sentinel) = new SDL_Color[columns];
+		}
+
+		catch (bad_alloc & ba)
+		{
+			cout << "Error! (couldn't allocate the dynamic array)" << endl;
+			cout << ba.what() << endl;						//	displays the exact cause
+		}
+
+	}
+
+	return array;
+}
+
+void fill_two_dimensional_array_with_value(double ** array, int rows, int columns, int value)
+{
+	for (int sentinel = 0; sentinel < rows; ++sentinel)
+	{
+		for (int secondSentinel = 0; secondSentinel < columns; ++secondSentinel)
+		{
+			array[sentinel][secondSentinel] = value;
+		}
+	}
+}
+
+void delete_two_dimensional_array(double ** array, int columns)
+{
+	for (int sentinel = 0; sentinel < columns; ++sentinel)
+	{
+		delete[] array[sentinel];
+	}
+
+	delete[] array;
+}
+
+void display_two_dimensional_array_rows_in_single_line_negative_numbers(double ** array, int rows, int columns)
+{
+	for (int sentinel = 0; sentinel < rows; ++sentinel)
+	{
+		for (int secondSentinel = 0; secondSentinel < columns; ++secondSentinel)
+		{
+			cout.precision(2);
+			cout << fixed << array[sentinel][secondSentinel] << " ";
+		}
+
+		cout << endl;
+	}
+}
+
+void copyCurrentSDLWindow(ImageConverter & converter, SDL_Color ** inputImage, int width, int height)
+{
+	for (int y = 0; y < height; ++y)
+	{
+		for (int x = 0; x < width; ++x)
+		{
+			inputImage[x][y] = converter.getPixel(x, y);
+		}
+	}
 }
