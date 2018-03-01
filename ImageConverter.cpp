@@ -434,60 +434,31 @@ void ImageConverter::dithering(SDL_Color ** inputImage, char & paletteChoice)
 			// add current quant error to neighbouring pixels
 			if (x + 1 < imageWidth)
 			{
-				quantErrorR[x + 1][y] += static_cast<double>(currentQuantError.r) * firstFraction;
-				quantErrorG[x + 1][y] += static_cast<double>(currentQuantError.g) * firstFraction;
-				quantErrorB[x + 1][y] += static_cast<double>(currentQuantError.b) * firstFraction;
+				quantErrorR[x + 1][y] += currentQuantError.r * firstFraction;
+				quantErrorG[x + 1][y] += currentQuantError.g * firstFraction;
+				quantErrorB[x + 1][y] += currentQuantError.b * firstFraction;
 			}
 
 			if (y + 1 < imageHeight)
 			{
 				if (x - 1 >= 0)
 				{
-					quantErrorR[x - 1][y + 1] += static_cast<double>(currentQuantError.r) * secondFraction;
-					quantErrorG[x - 1][y + 1] += static_cast<double>(currentQuantError.g) * secondFraction;
-					quantErrorB[x - 1][y + 1] += static_cast<double>(currentQuantError.b) * secondFraction;
+					quantErrorR[x - 1][y + 1] += currentQuantError.r * secondFraction;
+					quantErrorG[x - 1][y + 1] += currentQuantError.g * secondFraction;
+					quantErrorB[x - 1][y + 1] += currentQuantError.b * secondFraction;
 				}
 
-				quantErrorR[x][y + 1] += static_cast<double>(currentQuantError.r) * thirdFraction;
-				quantErrorG[x][y + 1] += static_cast<double>(currentQuantError.g) * thirdFraction;
-				quantErrorB[x][y + 1] += static_cast<double>(currentQuantError.b) * thirdFraction;
+				quantErrorR[x][y + 1] += currentQuantError.r * thirdFraction;
+				quantErrorG[x][y + 1] += currentQuantError.g * thirdFraction;
+				quantErrorB[x][y + 1] += currentQuantError.b * thirdFraction;
 
 				if (x + 1 < imageWidth)
 				{
-					quantErrorR[x + 1][y + 1] += static_cast<double>(currentQuantError.r) * fourthFraction;
-					quantErrorG[x + 1][y + 1] += static_cast<double>(currentQuantError.g) * fourthFraction;
-					quantErrorB[x + 1][y + 1] += static_cast<double>(currentQuantError.b) * fourthFraction;
+					quantErrorR[x + 1][y + 1] += currentQuantError.r * fourthFraction;
+					quantErrorG[x + 1][y + 1] += currentQuantError.g * fourthFraction;
+					quantErrorB[x + 1][y + 1] += currentQuantError.b * fourthFraction;
 				}
 			}
-
-			//// add current quant error to neighbouring pixels
-			//if (x + 1 < imageWidth)
-			//{
-			//	quantErrorR[x + 1][y] += currentQuantError.r * firstFraction;
-			//	quantErrorG[x + 1][y] += currentQuantError.g * firstFraction;
-			//	quantErrorB[x + 1][y] += currentQuantError.b * firstFraction;
-			//}
-
-			//if (y + 1 < imageHeight)
-			//{
-			//	if (x - 1 >= 0)
-			//	{
-			//		quantErrorR[x - 1][y + 1] += currentQuantError.r * secondFraction;
-			//		quantErrorG[x - 1][y + 1] += currentQuantError.g * secondFraction;
-			//		quantErrorB[x - 1][y + 1] += currentQuantError.b * secondFraction;
-			//	}
-
-			//	quantErrorR[x][y + 1] += currentQuantError.r * thirdFraction;
-			//	quantErrorG[x][y + 1] += currentQuantError.g * thirdFraction;
-			//	quantErrorB[x][y + 1] += currentQuantError.b * thirdFraction;
-
-			//	if (x + 1 < imageWidth)
-			//	{
-			//		quantErrorR[x + 1][y + 1] += currentQuantError.r * fourthFraction;
-			//		quantErrorG[x + 1][y + 1] += currentQuantError.g * fourthFraction;
-			//		quantErrorB[x + 1][y + 1] += currentQuantError.b * fourthFraction;
-			//	}
-			//}
 		}
 	}
 
