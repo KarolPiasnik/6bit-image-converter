@@ -8,7 +8,7 @@ ___
 
 | Original Image  | Median Cut (includes Dithering) | Grayscale (includes Dithering) |
 |  :---:  |  :---:  |  :---: |
-| <img src="image.bmp" width="260" /> | <img src="resultDitheringMedianCut.bmp" width="260" /> | <img src="resultDitheringBW.bmp" width="260" /> |
+| <img src="image.bmp" width="270" /> | <img src="resultDitheringMedianCut.bmp" width="270" /> | <img src="resultDitheringBW.bmp" width="270" /> |
 
 ___
 
