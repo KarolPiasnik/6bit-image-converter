@@ -1,7 +1,6 @@
-#include "ImageConverter.h"
 #include <algorithm>
 #include <iostream>
-
+#include "ImageConverter.h"
 
 void ImageConverter::_medianCut(vector<SDL_Color>::iterator start, vector<SDL_Color>::iterator end, int numberOfColors = 64, int currentNumber = 1)
 {	
@@ -91,7 +90,6 @@ void ImageConverter::medianCut()
 
 	_medianCut(pixels.begin(), pixels.end());
 }
-
 
 void ImageConverter::fillArrays()
 {
@@ -226,9 +224,4 @@ void ImageConverter::fillArrays()
 	imposedPalette[63] = { 252,252,252 };
 
 	medianCut();
-	
 }
-
-
-
-

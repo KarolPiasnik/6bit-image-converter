@@ -14,16 +14,6 @@ using namespace std;
 
 int main(int argc, char * argv[])
 {
-	Data data;
-	char sample[50] = {1, 1, 1, 0, 5, 1, 2, 3, 4, 5, 6, 7, 7, 7, 8, 8, 8, 8, 8, 8, 2, 1, 3, 100};
-	data.data = sample;
-	data.length = 23;
-
-	for (int i = 0; i < data.length; ++i)
-	{
-		continue;
-	}
-
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	{
 		cout << "SDL initialization failed. SDL Error: " << SDL_GetError() << endl;
@@ -56,7 +46,7 @@ int main(int argc, char * argv[])
 			converter.dedicatedTransform();
 			break;
 		case '3':
-			cout << "- Converting to gray scale palette..." << endl << endl;
+			cout << "- Converting to grayscale palette..." << endl << endl;
 			converter.grayScaleTransform();
 			break;
 		default:
@@ -80,8 +70,8 @@ int main(int argc, char * argv[])
 		switch (saveOptionChoice)
 		{
 		case '1':
-			cout << "- Saving to .bmp file." << endl << endl;
-			converter.saveToBmp("Result.bmp");
+			cout << "- Saving to .bmp file. [result.bmp]" << endl << endl;
+			converter.saveToBmp("result.bmp");
 			break;
 		case '2':
 			cout << "- Saving to .karol file." << endl << endl;

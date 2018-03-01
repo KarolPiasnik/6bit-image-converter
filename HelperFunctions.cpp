@@ -177,7 +177,8 @@ double ** create_two_dimensional_array(int rows, int columns)
 	catch (bad_alloc & ba)
 	{
 		cout << "Error! (couldn't allocate the dynamic array)" << endl;
-		cout << ba.what() << endl;							//	displays the exact cause
+		// displays the exact cause
+		cout << ba.what() << endl;
 	}
 
 	for (int sentinel = 0; sentinel < rows; ++sentinel)
@@ -190,7 +191,8 @@ double ** create_two_dimensional_array(int rows, int columns)
 		catch (bad_alloc & ba)
 		{
 			cout << "Error! (couldn't allocate the dynamic array)" << endl;
-			cout << ba.what() << endl;						//	displays the exact cause
+			// displays the exact cause
+			cout << ba.what() << endl;
 		}
 
 	}
@@ -210,7 +212,8 @@ SDL_Color ** create_two_dimensional_SDL_array(int rows, int columns)
 	catch (bad_alloc & ba)
 	{
 		cout << "Error! (couldn't allocate the dynamic array)" << endl;
-		cout << ba.what() << endl;							//	displays the exact cause
+		// displays the exact cause
+		cout << ba.what() << endl;
 	}
 
 	for (int sentinel = 0; sentinel < rows; ++sentinel)
@@ -223,7 +226,8 @@ SDL_Color ** create_two_dimensional_SDL_array(int rows, int columns)
 		catch (bad_alloc & ba)
 		{
 			cout << "Error! (couldn't allocate the dynamic array)" << endl;
-			cout << ba.what() << endl;						//	displays the exact cause
+			// displays the exact cause
+			cout << ba.what() << endl;
 		}
 
 	}

@@ -1,8 +1,8 @@
-﻿#include "ImageConverter.h"
+﻿#include <iomanip>
+#include <cmath>
+#include "ImageConverter.h"
 #include "HelperFunctions.h"
 #include "Header.h"
-#include <cmath>
-#include <iomanip>
 
 ImageConverter::ImageConverter(const char * filename)
 {
@@ -216,7 +216,6 @@ Data ImageConverter::predefinedTransform()
 	}
 	SDL_Flip(screen);
 	return result;
-
 }
 
 Data ImageConverter::dedicatedTransform()
@@ -255,9 +254,7 @@ Data ImageConverter::dedicatedTransform()
 
 	SDL_Flip(screen);
 	return result;
-
 }
-
 
 Data ImageConverter::grayScaleTransform()
 {
@@ -355,45 +352,45 @@ SDL_Color ImageConverter::findClosestPaletteColor(const SDL_Color & oldColor, ch
 	}
 }
 
-void ImageConverter::adjustRange(SDL_Color & oldColor, double & quantErrorR, double & quantErrorG, double & quantErrorB)
+void ImageConverter::adjustRange(SDL_Color & currentColor, double & quantErrorR, double & quantErrorG, double & quantErrorB)
 {
-	if (oldColor.r + quantErrorR > 255)
+	if (currentColor.r + quantErrorR > 255)
 	{
-		oldColor.r = 255;
+		currentColor.r = 255;
 	}
-	else if (oldColor.r + quantErrorR < 0)
+	else if (currentColor.r + quantErrorR < 0)
 	{
-		oldColor.r = 0;
+		currentColor.r = 0;
 	}
 	else
 	{
-		oldColor.r = oldColor.r + quantErrorR;
+		currentColor.r = currentColor.r + quantErrorR;
 	}
 
-	if (oldColor.g + quantErrorG > 255)
+	if (currentColor.g + quantErrorG > 255)
 	{
-		oldColor.g = 255;
+		currentColor.g = 255;
 	}
-	else if (oldColor.g + quantErrorG < 0)
+	else if (currentColor.g + quantErrorG < 0)
 	{
-		oldColor.g = 0;
+		currentColor.g = 0;
 	}
 	else
 	{
-		oldColor.g = oldColor.g + quantErrorG;
+		currentColor.g = currentColor.g + quantErrorG;
 	}
 
-	if (oldColor.b + quantErrorB > 255)
+	if (currentColor.b + quantErrorB > 255)
 	{
-		oldColor.b = 255;
+		currentColor.b = 255;
 	}
-	else if (oldColor.b + quantErrorB < 0)
+	else if (currentColor.b + quantErrorB < 0)
 	{
-		oldColor.b = 0;
+		currentColor.b = 0;
 	}
 	else
 	{
-		oldColor.b = oldColor.b + quantErrorB;
+		currentColor.b = currentColor.b + quantErrorB;
 	}
 }
 
@@ -462,6 +459,35 @@ void ImageConverter::dithering(SDL_Color ** inputImage, char & paletteChoice)
 					quantErrorB[x + 1][y + 1] += static_cast<double>(currentQuantError.b) * fourthFraction;
 				}
 			}
+
+			//// add current quant error to neighbouring pixels
+			//if (x + 1 < imageWidth)
+			//{
+			//	quantErrorR[x + 1][y] += currentQuantError.r * firstFraction;
+			//	quantErrorG[x + 1][y] += currentQuantError.g * firstFraction;
+			//	quantErrorB[x + 1][y] += currentQuantError.b * firstFraction;
+			//}
+
+			//if (y + 1 < imageHeight)
+			//{
+			//	if (x - 1 >= 0)
+			//	{
+			//		quantErrorR[x - 1][y + 1] += currentQuantError.r * secondFraction;
+			//		quantErrorG[x - 1][y + 1] += currentQuantError.g * secondFraction;
+			//		quantErrorB[x - 1][y + 1] += currentQuantError.b * secondFraction;
+			//	}
+
+			//	quantErrorR[x][y + 1] += currentQuantError.r * thirdFraction;
+			//	quantErrorG[x][y + 1] += currentQuantError.g * thirdFraction;
+			//	quantErrorB[x][y + 1] += currentQuantError.b * thirdFraction;
+
+			//	if (x + 1 < imageWidth)
+			//	{
+			//		quantErrorR[x + 1][y + 1] += currentQuantError.r * fourthFraction;
+			//		quantErrorG[x + 1][y + 1] += currentQuantError.g * fourthFraction;
+			//		quantErrorB[x + 1][y + 1] += currentQuantError.b * fourthFraction;
+			//	}
+			//}
 		}
 	}
 
@@ -469,81 +495,3 @@ void ImageConverter::dithering(SDL_Color ** inputImage, char & paletteChoice)
 	delete_two_dimensional_array(quantErrorG, imageWidth);
 	delete_two_dimensional_array(quantErrorB, imageWidth);
 }
-
-/*
-Data standard(string name, bool compress) {
-	std::ofstream myFile(name.c_str(),  std::ofstream::binary);
-	Header header = Header();
-	header.setFileSize((imageWidth*imageHeight*3)/4+1+17);
-	header.setBeginning(17);
-	header.setColorSet(0);
-	header.setType(42);
-	header.setImageSize(imageWidth,imageHeight);
-	myFile.write(&header.byteData.data[0], header.byteData.length);
-
-
-	uint8_t * imageData = new uint8_t[imageWidth*imageHeight];
-	for(int i = 0; i<imageWidth*imageHeight; ++i){
-		imageData[i]=0;
-	}
-
-	int byteCounter = 0;
-	int bitCounter = 0;
-	int newPixel = 0;
-
-	for(int i = 0; i<imageWidth; ++i){
-		for(int j = 0; j<imageHeight; ++j){
-			SDL_Color pixel = getPixel(i,j);
-			newPixel = 0;
-
-			if(bitCounter==8)
-			{
-				bitCounter = 0;
-				++byteCounter;
-			}
-
-			imageData[byteCounter] += (pixel.r /64)<<(6-bitCounter);
-			newPixel += (pixel.r /64)<<4;
-			bitCounter += 2;
-
-			if(bitCounter==8)
-			{
-				bitCounter = 0;
-				++byteCounter;
-			}
-
-			imageData[byteCounter] += (pixel.g /64)<<(6-bitCounter);
-			newPixel += (pixel.g /64)<<2;
-			bitCounter += 2;
-
-			if(bitCounter==8)
-			{
-				bitCounter = 0;
-				++byteCounter;
-			}
-
-			imageData[byteCounter] += (pixel.b /64)<<(6-bitCounter);
-			newPixel += (pixel.b /64);
-			bitCounter += 2;
-
-			setPixel(i,j,standardColors[newPixel].r,standardColors[newPixel].g,standardColors[newPixel].b);
-
-		}
-	}
-
-	Data result = Data(byteCounter);
-	for(int i = 0; i < byteCounter; ++i){
-		result.data[i] = imageData[i];
-	}
-
-	if(compress)
-		cout<<"Rozmiar po kompresji: "<<byteRunCompress(&result)<<endl;
-
-	myFile.write(&result.data[0], result.length);
-	myFile.close();
-
-	SDL_Flip(screen);
-
-	return result;
-}
-*/
