@@ -15,7 +15,8 @@ ___
 ## Launching the Converter
 
 In order to launch the converter make sure you have properly intialised SDL with Visual Studio 2017.</br>
-**[Seting Up SDL with Visual Studio 2017](https://www.wikihow.com/Set-Up-SDL-with-Visual-Studio-2017)**
+**[Seting Up SDL with Visual Studio 2017](https://www.wikihow.com/Set-Up-SDL-with-Visual-Studio-2017)**</br>
+**Note: SDL library in 1.2.15 version was used.**
 
 ## To-Do List:
 - [x] ~~Open and save .bmp file~~
